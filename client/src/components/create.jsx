@@ -11,6 +11,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Drawer from "./Drawer";
+import theme from "../theme";
 
 const questionTypes = [
   { value: "open-ended", label: "Open Ended" },
@@ -52,11 +53,9 @@ export default function Create() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
       <Drawer />
       <Container component="main" maxWidth="lg">
-        {" "}
-        {/* Change maxWidth to lg */}
         <CssBaseline />
         <Box
           sx={{
@@ -64,12 +63,19 @@ export default function Create() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            bgcolor: theme.palette.background.paper, // Set background color to theme.palette.background.paper
+            padding: 3, // Add some padding
+            borderRadius: 2, // Optional: Rounded corners
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{ color: theme.palette.primary.main }}
+          >
             Create Quiz
           </Typography>
           <Box
@@ -91,13 +97,18 @@ export default function Create() {
                   name="file"
                   id="file-input"
                   onChange={handleFileChange}
-                  sx={{ mb: 2 }} // Add margin below to separate from other fields
+                  sx={{ mb: 2, color: theme.palette.primary.main }} // Add margin below to separate from other fields
                 />
                 {file && (
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Typography variant="body2">{file.name}</Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: theme.palette.primary.main }}
+                    >
+                      {file.name}
+                    </Typography>
                     <Button
                       variant="outlined"
                       color="error"
@@ -132,6 +143,7 @@ export default function Create() {
                   fullWidth
                   variant="outlined"
                   name="maxQuestions"
+                  sx={{ borderColor: "theme.palette.primary.main" }}
                 />
               </Grid>
             </Grid>
@@ -141,6 +153,9 @@ export default function Create() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
+              Extract Text
+            </Button>
+            <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Create Quiz
             </Button>
           </Box>
@@ -151,15 +166,23 @@ export default function Create() {
               width: "100%", // Make the container full width
               maxHeight: 400, // Set a max height
               overflowY: "auto", // Enable vertical scrolling
-              border: "1px solid #ccc", // Optional: Add a border
+              border: `1px solid ${theme.palette.primary.main}`, // Use primary color for border
               borderRadius: 2, // Optional: Rounded corners
               p: 2, // Padding
               mt: 3, // Margin top
-              bgcolor: "#f5f5f5", // Optional: Background color
+              bgcolor: theme.palette.background.paper, // Background color for extracted text box
             }}
           >
-            <Typography variant="h6">Extracted Text:</Typography>
-            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+            <Typography variant="h6" sx={{ color: theme.palette.primary.main }}>
+              Extracted Text:
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                whiteSpace: "pre-wrap",
+                color: "white",
+              }}
+            >
               {extractedText} {/* Display the extracted text */}
             </Typography>
           </Box>

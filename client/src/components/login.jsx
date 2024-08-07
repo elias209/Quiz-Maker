@@ -13,12 +13,27 @@ import Copyright from "./copyright";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  // Retrieve the username from local storage when the component mounts
+  React.useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const username = data.get("username");
     const password = data.get("password");
+
+    // Check for empty fields
+    if (!username || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3001/login", {
@@ -30,7 +45,12 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        if (response.status === 401) {
+          setError("Invalid username or password.");
+        } else {
+          throw new Error("Network response was not ok");
+        }
+        return;
       }
 
       const result = await response.json();
@@ -39,6 +59,7 @@ export default function Login() {
       navigate("/home");
     } catch (error) {
       console.error("Error:", error);
+      setError("An error occurred. Please try again.");
     }
   };
 
@@ -82,6 +103,11 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
           <Box
             component="form"
             noValidate
@@ -93,10 +119,13 @@ export default function Login() {
               required
               fullWidth
               id="username"
-              label="Username"
+              label="Username or Email"
               name="username"
               autoComplete="username"
+              placeholder="Username or Email"
               autoFocus
+              value={username} // Bind the value to the state
+              onChange={(e) => setUsername(e.target.value)} // Update state on change
               sx={{ borderRadius: 1 }}
             />
             <TextField
@@ -108,6 +137,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              placeholder="Password"
               sx={{ borderRadius: 1 }}
             />
             <Button

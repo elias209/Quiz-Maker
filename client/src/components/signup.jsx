@@ -8,16 +8,23 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Copyright from "./copyright";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get("username");
     const password = data.get("password");
+
+    // Show alert if username or password is empty
+    if (!username || !password) {
+      alert("Please fill out all fields.");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3001/signup", {
@@ -34,6 +41,15 @@ export default function SignUp() {
 
       const result = await response.json();
       console.log("Success:", result);
+
+      // Store the username and password in local storage
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
+
+      alert("Sign up successful! You will be redirected to the login page.");
+
+      // Redirect to login page
+      navigate("/"); // Adjust to your login route
     } catch (error) {
       console.error("Error:", error);
     }
@@ -47,7 +63,7 @@ export default function SignUp() {
         height: "100vh",
         justifyContent: "center",
         alignItems: "center",
-        background: "linear-gradient(to bottom right, blavk, #9c27b0)",
+        background: "linear-gradient(to top right, black, #9c27b0)",
       }}
     >
       <CssBaseline />

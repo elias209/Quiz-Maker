@@ -1,0 +1,24 @@
+/* customScrollbar.css */
+
+body {
+  background-color: black; /* Set background color to black */
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: black; /* Background color of the scrollbar track */
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #673ab7; /* Color of the scrollbar thumb */
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8e24aa; /* Darker color for the thumb on hover */
+}

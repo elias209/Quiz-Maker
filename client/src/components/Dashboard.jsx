@@ -9,14 +9,12 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems } from "./listItems"; // Ensure this path is correct
+import { mainListItems } from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
@@ -98,7 +96,11 @@ export default function Dashboard() {
     <ThemeProvider theme={blackPurpleTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <AppBar
+          position="absolute"
+          open={open}
+          style={{ backgroundColor: theme.palette.background.paper }}
+        >
           <Toolbar
             sx={{
               pr: "24px", // keep right padding when drawer closed
@@ -111,17 +113,19 @@ export default function Dashboard() {
               onClick={toggleDrawer}
               sx={{
                 marginRight: "36px",
+                backgroundColor: theme.palette.background.primary,
                 ...(open && { display: "none" }),
               }}
             >
-              <MenuIcon />
+              <MenuIcon style={{ color: theme.palette.primary.main }} />{" "}
+              {/* Set icon color */}
             </IconButton>
             <Typography
               component="h1"
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, color: theme.palette.primary.main }}
             >
               Dashboard
             </Typography>
@@ -139,17 +143,14 @@ export default function Dashboard() {
           <Toolbar>
             <IconButton
               onClick={toggleDrawer}
-              sx={{ color: theme.palette.primary.main }}
+              sx={{ color: theme.palette.primary.main }} // Set close button color from theme
             >
-              {" "}
-              {/* Set close button color from theme */}
-              <ChevronLeftIcon />
+              <ChevronLeftIcon style={{ color: theme.palette.primary.main }} />{" "}
+              {/* Set icon color */}
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
-            {mainListItems()} {/* Call the function to render the list items */}
-          </List>
+          <List component="nav">{mainListItems()}</List>
         </Drawer>
         <Box
           component="main"

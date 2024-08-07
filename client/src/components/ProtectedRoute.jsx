@@ -5,7 +5,11 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = !!localStorage.getItem("token"); // Check if the token exists
 
-  return isAuthenticated ? element : <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return element;
 };
 
 export default ProtectedRoute;

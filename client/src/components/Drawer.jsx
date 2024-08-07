@@ -5,9 +5,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,6 +12,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import MenuIcon from "@mui/icons-material/Menu";
+import DescriptionIcon from "@mui/icons-material/Description"; // Import an icon for the Exam page
 import theme from "../theme";
 
 export default function PersistentDrawerLeft() {
@@ -24,8 +24,17 @@ export default function PersistentDrawerLeft() {
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
+
   const handleBack = () => {
     navigate("/home");
+  };
+
+  const handleRefresh = () => {
+    window.location.reload(); // Refresh the page
+  };
+
+  const handleExam = () => {
+    navigate("/exam"); // Navigate to the Exam page
   };
 
   const drawer = (
@@ -34,26 +43,44 @@ export default function PersistentDrawerLeft() {
       role="presentation"
       onClick={handleDrawerToggle}
       onKeyDown={handleDrawerToggle}
-      style={{ color: theme.palette.background.paper }}
+      style={{ color: theme.palette.primary.main }} // Set the text color for the drawer
     >
       <List>
-        {" "}
         <ListItem button key="Back to Home" onClick={handleBack}>
-          {" "}
           <ListItemIcon>
-            {" "}
-            <HomeIcon />{" "}
-          </ListItemIcon>{" "}
-          <ListItemText primary="Back to Home" />{" "}
-        </ListItem>{" "}
+            <HomeIcon style={{ color: theme.palette.primary.main }} />
+          </ListItemIcon>
+          <ListItemText primary="Back to Home" />
+        </ListItem>
+        <ListItem button key="Refresh" onClick={handleRefresh}>
+          <ListItemIcon>
+            <RefreshIcon style={{ color: theme.palette.primary.main }} />
+          </ListItemIcon>
+          <ListItemText primary="Refresh" />
+        </ListItem>
+        <ListItem button key="Exam" onClick={handleExam}>
+          <ListItemIcon>
+            <DescriptionIcon style={{ color: theme.palette.primary.main }} />
+          </ListItemIcon>
+          <ListItemText primary="Exam" />
+        </ListItem>
       </List>
     </Box>
   );
 
   return (
-    <Box sx={{ flexGrow: 1, color: theme.palette.background.paper }}>
-      <AppBar position="static">
-        <Toolbar>
+    <Box
+      sx={{
+        display: "flex",
+        flexGrow: 1,
+        color: theme.palette.background.paper,
+      }}
+    >
+      <AppBar
+        position="static"
+        style={{ backgroundColor: theme.palette.background.paper }}
+      >
+        <Toolbar style={{ backgroundColor: theme.palette.background.paper }}>
           <IconButton
             size="large"
             edge="start"
@@ -62,21 +89,20 @@ export default function PersistentDrawerLeft() {
             sx={{ mr: 2 }}
             onClick={handleDrawerToggle}
           >
-            <MenuIcon />
+            <MenuIcon style={{ color: theme.palette.primary.main }} />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ color: theme.palette.primary.main }}
+          >
             Quiz Maker
           </Typography>
-
-          <Box sx={{ flexGrow: 1, color: theme.palette.background.paper }} />
+          <Box sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-        style={{ color: theme.palette.background.paper }}
-      >
+      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
         {drawer}
       </Drawer>
     </Box>
