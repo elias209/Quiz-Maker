@@ -8,21 +8,22 @@ import Create from "./components/create";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
+import { colors } from "@mui/material";
+import theme from "./theme";
 const blackPurpleTheme = createTheme({
   palette: {
     primary: {
-      main: "#673ab7", // Purple
+      main: colors.deepPurple[200], // Purple
     },
     secondary: {
-      main: "#000000", // Black
+      main: colors.deepPurple[200],
     },
   },
 });
 
 function App() {
   return (
-    <ThemeProvider theme={blackPurpleTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Routes>

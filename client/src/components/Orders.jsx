@@ -63,39 +63,29 @@ export default function Orders() {
   return (
     <React.Fragment>
       <Title>Recent Orders</Title>
-      <Table size="small" sx={{ backgroundColor: "black", color: "white" }}>
+      <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ color: "white" }}>Date</TableCell>
-            <TableCell sx={{ color: "white" }}>Name</TableCell>
-            <TableCell sx={{ color: "white" }}>Ship To</TableCell>
-            <TableCell sx={{ color: "white" }}>Payment Method</TableCell>
-            <TableCell align="right" sx={{ color: "white" }}>
-              Sale Amount
-            </TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Ship To</TableCell>
+            <TableCell>Payment Method</TableCell>
+            <TableCell align="right">Sale Amount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell sx={{ color: "white" }}>{row.date}</TableCell>
-              <TableCell sx={{ color: "white" }}>{row.name}</TableCell>
-              <TableCell sx={{ color: "white" }}>{row.shipTo}</TableCell>
-              <TableCell sx={{ color: "white" }}>{row.paymentMethod}</TableCell>
-              <TableCell
-                align="right"
-                sx={{ color: "white" }}
-              >{`$${row.amount}`}</TableCell>
+              <TableCell>{row.date}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.shipTo}</TableCell>
+              <TableCell>{row.paymentMethod}</TableCell>
+              <TableCell align="right">{`$${row.amount}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Link
-        color="secondary"
-        href="#"
-        onClick={preventDefault}
-        sx={{ mt: 3, color: "#673ab7" }}
-      >
+      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
         See more orders
       </Link>
     </React.Fragment>

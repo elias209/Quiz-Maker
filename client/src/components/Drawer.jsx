@@ -15,29 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import theme from "../theme";
 
 export default function PersistentDrawerLeft() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -56,6 +34,7 @@ export default function PersistentDrawerLeft() {
       role="presentation"
       onClick={handleDrawerToggle}
       onKeyDown={handleDrawerToggle}
+      style={{ color: theme.palette.background.paper }}
     >
       <List>
         {" "}
@@ -72,7 +51,7 @@ export default function PersistentDrawerLeft() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, color: theme.palette.background.paper }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -89,10 +68,15 @@ export default function PersistentDrawerLeft() {
             Quiz Maker
           </Typography>
 
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1, color: theme.palette.background.paper }} />
         </Toolbar>
       </AppBar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={handleDrawerToggle}
+        style={{ color: theme.palette.background.paper }}
+      >
         {drawer}
       </Drawer>
     </Box>

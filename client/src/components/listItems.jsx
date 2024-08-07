@@ -5,6 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import LayersIcon from "@mui/icons-material/Layers";
 import { useNavigate } from "react-router-dom";
+import theme from "../theme"; // Import your theme
 
 export const mainListItems = () => {
   const navigate = useNavigate(); // Initialize useNavigate for navigation
@@ -12,23 +13,37 @@ export const mainListItems = () => {
   const handleCreateQuiz = () => {
     navigate("/create"); // Navigate to the Create Quiz page
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token
     navigate("/"); // Redirect to login page
   };
+
   return (
     <React.Fragment>
       <ListItemButton onClick={handleCreateQuiz}>
-        <ListItemIcon>
+        <ListItemIcon sx={{ color: theme.palette.primary.main }}>
+          {" "}
+          {/* Set icon color from theme */}
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="Create Quiz" />
+        <ListItemText
+          primary="Create Quiz"
+          sx={{ color: theme.palette.primary.main }}
+        />{" "}
+        {/* Set text color from theme */}
       </ListItemButton>
       <ListItemButton onClick={handleLogout}>
-        <ListItemIcon>
+        <ListItemIcon sx={{ color: theme.palette.primary.main }}>
+          {" "}
+          {/* Set icon color from theme */}
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <ListItemText
+          primary="Logout"
+          sx={{ color: theme.palette.primary.main }}
+        />{" "}
+        {/* Set text color from theme */}
       </ListItemButton>
     </React.Fragment>
   );
