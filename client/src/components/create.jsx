@@ -23,15 +23,22 @@ const defaultTheme = createTheme();
 export default function Create() {
   const [questionType, setQuestionType] = React.useState("");
   const [file, setFile] = React.useState(null);
+  const [extractedText, setExtractedText] = React.useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      questionType: data.get("questionType"),
-      maxQuestions: data.get("maxQuestions"),
-      file: data.get("file"),
+
+    const response = await fetch("http://localhost:3001/upload", {
+      method: "POST",
+      body: data,
     });
+
+    const result = await response.json();
+    console.log(result); // Print the server response to the console
+    if (result.text) {
+      setExtractedText(result.text); // Store the extracted text in state
+    }
   };
 
   const handleFileChange = (event) => {
@@ -41,14 +48,15 @@ export default function Create() {
 
   const handleRemoveFile = () => {
     setFile(null);
-    // Optionally, reset the file input as well
     document.getElementById("file-input").value = ""; // Reset input field
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Drawer />
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="lg">
+        {" "}
+        {/* Change maxWidth to lg */}
         <CssBaseline />
         <Box
           sx={{
@@ -135,6 +143,25 @@ export default function Create() {
             >
               Create Quiz
             </Button>
+          </Box>
+
+          {/* Container for displaying extracted text */}
+          <Box
+            sx={{
+              width: "100%", // Make the container full width
+              maxHeight: 400, // Set a max height
+              overflowY: "auto", // Enable vertical scrolling
+              border: "1px solid #ccc", // Optional: Add a border
+              borderRadius: 2, // Optional: Rounded corners
+              p: 2, // Padding
+              mt: 3, // Margin top
+              bgcolor: "#f5f5f5", // Optional: Background color
+            }}
+          >
+            <Typography variant="h6">Extracted Text:</Typography>
+            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
+              {extractedText} {/* Display the extracted text */}
+            </Typography>
           </Box>
         </Box>
       </Container>
