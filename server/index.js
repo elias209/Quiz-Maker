@@ -86,8 +86,8 @@ app.post("/upload", async (req, res) => {
       return res.status(400).send("Unsupported file type.");
     }
 
-    console.log("Extracted text:", textContent); // Log the extracted text
-    res.json({ text: textContent }); // Return the extracted text
+    console.log("Extracted text:", textContent);
+    res.json({ text: textContent });
   } catch (error) {
     console.error("Error processing file:", error);
     res.status(500).send("Error processing file.");
