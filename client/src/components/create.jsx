@@ -19,16 +19,17 @@ const questionTypes = [
   { value: "true-false", label: "True/False" },
 ];
 
-const defaultTheme = createTheme();
-
 export default function Create() {
   const [questionType, setQuestionType] = React.useState("");
   const [file, setFile] = React.useState(null);
   const [extractedText, setExtractedText] = React.useState("");
+  const [maxQuestions, setMaxQuestions] = React.useState(5); // Set a default max question limit
+  const [quiz, setQuiz] = React.useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const data = new FormData();
+    data.append("file", file); // Ensure that the file is sent
 
     const response = await fetch("http://localhost:3001/upload", {
       method: "POST",
@@ -49,7 +50,30 @@ export default function Create() {
 
   const handleRemoveFile = () => {
     setFile(null);
-    document.getElementById("file-input").value = ""; // Reset input field
+  };
+
+  const handleGenerateQuiz = async () => {
+    if (!extractedText || !questionType || !maxQuestions) {
+      alert(
+        "Please ensure that all fields are filled in and text is extracted."
+      );
+      return;
+    }
+
+    const response = await fetch("http://localhost:3001/generate-quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: extractedText,
+        questionType: questionType,
+        maxQuestions: maxQuestions,
+      }),
+    });
+
+    const result = await response.json();
+    setQuiz(result.quiz);
   };
 
   return (
@@ -63,9 +87,9 @@ export default function Create() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            bgcolor: theme.palette.background.paper, // Set background color to theme.palette.background.paper
-            padding: 3, // Add some padding
-            borderRadius: 2, // Optional: Rounded corners
+            bgcolor: theme.palette.background.paper,
+            padding: 3,
+            borderRadius: 2,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -97,7 +121,7 @@ export default function Create() {
                   name="file"
                   id="file-input"
                   onChange={handleFileChange}
-                  sx={{ mb: 2, color: theme.palette.primary.main }} // Add margin below to separate from other fields
+                  sx={{ mb: 2 }}
                 />
                 {file && (
                   <Box
@@ -143,7 +167,8 @@ export default function Create() {
                   fullWidth
                   variant="outlined"
                   name="maxQuestions"
-                  sx={{ borderColor: "theme.palette.primary.main" }}
+                  value={maxQuestions}
+                  onChange={(e) => setMaxQuestions(Number(e.target.value))}
                 />
               </Grid>
             </Grid>
@@ -155,22 +180,25 @@ export default function Create() {
             >
               Extract Text
             </Button>
-            <Button fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              onClick={handleGenerateQuiz}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
               Create Quiz
             </Button>
           </Box>
-
-          {/* Container for displaying extracted text */}
           <Box
             sx={{
-              width: "100%", // Make the container full width
-              maxHeight: 400, // Set a max height
-              overflowY: "auto", // Enable vertical scrolling
-              border: `1px solid ${theme.palette.primary.main}`, // Use primary color for border
-              borderRadius: 2, // Optional: Rounded corners
-              p: 2, // Padding
-              mt: 3, // Margin top
-              bgcolor: theme.palette.background.paper, // Background color for extracted text box
+              width: "100%",
+              maxHeight: 400,
+              overflowY: "auto",
+              border: `1px solid ${theme.palette.primary.main}`,
+              borderRadius: 2,
+              p: 2,
+              mt: 3,
+              bgcolor: theme.palette.background.paper,
             }}
           >
             <Typography variant="h6" sx={{ color: theme.palette.primary.main }}>
@@ -183,9 +211,58 @@ export default function Create() {
                 color: "white",
               }}
             >
-              {extractedText} {/* Display the extracted text */}
+              {extractedText}
             </Typography>
           </Box>
+
+          {quiz && (
+            <Box
+              sx={{
+                width: "100%",
+                maxHeight: 400,
+                overflowY: "auto",
+                border: `1px solid ${theme.palette.primary.main}`,
+                borderRadius: 2,
+                p: 2,
+                mt: 3,
+                bgcolor: theme.palette.background.paper,
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ color: theme.palette.primary.main }}
+              >
+                Generated Quiz:
+              </Typography>
+              <Box>
+                {Array.isArray(quiz) ? (
+                  quiz.map((question, index) => (
+                    <Box key={index} sx={{ mb: 2 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "white", mb: 1 }}
+                      >
+                        {question.question}
+                      </Typography>
+                      <ul>
+                        {question.options.map((option, i) => (
+                          <li key={i}>
+                            <Typography variant="body2" sx={{ color: "white" }}>
+                              {option}
+                            </Typography>
+                          </li>
+                        ))}
+                      </ul>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography variant="body2" sx={{ color: "white" }}>
+                    {JSON.stringify(quiz, null, 2)}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )}
         </Box>
       </Container>
     </ThemeProvider>

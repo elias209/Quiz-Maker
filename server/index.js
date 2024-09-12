@@ -5,15 +5,16 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
-const pdfParse = require("pdf-parse"); // Import pdf-parse for PDF text extraction
-const mammoth = require("mammoth"); // Import mammoth for DOCX text extraction
+const pdfParse = require("pdf-parse");
+const mammoth = require("mammoth");
+const { OpenAI } = require("openai");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload()); // Enable file upload
+app.use(fileUpload());
 
-// Log environment variables to ensure they are loaded correctly
+// Log environment variables
 console.log("ENV VARIABLES:");
 console.log("APP_PORT:", process.env.APP_PORT);
 console.log("DB_URL:", process.env.DB_URL);
@@ -22,17 +23,17 @@ console.log("DB_PASS:", process.env.DB_PASS);
 console.log("DB_PORT:", process.env.DB_PORT);
 console.log("DB_NAME:", process.env.DB_NAME);
 console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log("OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
 
-// Create MySQL connection using environment variables
+// Create MySQL connection
 const connection = mysql.createConnection({
-  host: process.env.DB_URL, // Database host
-  user: process.env.DB_USER, // Database username
-  password: process.env.DB_PASS, // Database password
-  database: process.env.DB_NAME, // Database name
-  port: process.env.DB_PORT, // Database port
+  host: process.env.DB_URL,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
 
-// Connect to MySQL
 connection.connect((err) => {
   if (err) {
     console.error("Error connecting to MySQL:", err.stack);
@@ -40,6 +41,25 @@ connection.connect((err) => {
   }
   console.log("Connected to MySQL as id " + connection.threadId);
 });
+
+// Initialize OpenAI
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Example function to use OpenAI
+const generateResponse = async (prompt) => {
+  try {
+    const response = await openai.complete({
+      engine: "davinci",
+      prompt: prompt,
+      maxTokens: 150,
+      temperature: 0.7,
+    });
+    return response.data.choices[0].text;
+  } catch (error) {
+    console.error("Error with OpenAI API:", error);
+    throw new Error("Could not generate response.");
+  }
+};
 
 // File parsing functions
 const parsePDF = async (fileBuffer) => {
@@ -151,6 +171,44 @@ app.post("/login", (req, res) => {
 
     res.json({ token });
   });
+});
+
+// /generate-quiz endpoint
+app.post("/generate-quiz", async (req, res) => {
+  const { text, questionType, maxQuestions } = req.body;
+
+  console.log("Received request to generate quiz:", {
+    text,
+    questionType,
+    maxQuestions,
+  });
+
+  try {
+    // Dummy function for generating quiz
+    const generateQuiz = async (text, questionType, maxQuestions) => {
+      // Replace this with your actual quiz generation logic
+      return {
+        questions: [
+          {
+            question: "Sample Question 1",
+            options: ["Option A", "Option B"],
+            answer: "Option A",
+          },
+          {
+            question: "Sample Question 2",
+            options: ["Option C", "Option D"],
+            answer: "Option D",
+          },
+        ].slice(0, maxQuestions),
+      };
+    };
+
+    const quiz = await generateQuiz(text, questionType, maxQuestions);
+    res.json({ quiz });
+  } catch (error) {
+    console.error("Error generating quiz:", error);
+    res.status(500).json({ error: "Error generating quiz" });
+  }
 });
 
 // Start the server
